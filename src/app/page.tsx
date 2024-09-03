@@ -1,113 +1,136 @@
-import Image from "next/image";
+"use client";
+import { useState } from "react";
+import { Menu, Plus, Star, User, Send, LogOut, Settings } from "lucide-react";
 
-export default function Home() {
+export default function Component() {
+  const [conversations, setConversations] = useState([
+    { id: 1, title: "Consulta de inversiones" },
+    { id: 2, title: "Planificación de jubilación" },
+    { id: 3, title: "Ahorro para emergencias" },
+    { id: 4, title: "Estrategias fiscales" },
+    { id: 5, title: "Presupuesto mensual" },
+    { id: 6, title: "Inversión en bienes raíces" },
+    { id: 7, title: "Análisis de riesgo" },
+    { id: 8, title: "Diversificación de cartera" },
+  ]);
+  const [currentConversation, setCurrentConversation] = useState(1);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [input, setInput] = useState("");
+
+  const startNewConversation = () => {
+    const newId = Math.max(...conversations.map((c) => c.id)) + 1;
+    const newConversation = { id: newId, title: `Nueva consulta ${newId}` };
+    setConversations([...conversations, newConversation]);
+    setCurrentConversation(newId);
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="flex h-screen bg-gray-100">
+      {/* Sidebar */}
+      <div
+        className={`bg-gray-900 text-white w-64 flex-shrink-0 flex flex-col ${
+          isSidebarOpen ? "block" : "hidden"
+        } md:block`}
+      >
+        <div className="p-4">
+          <button
+            onClick={startNewConversation}
+            className="w-full bg-blue-600 text-white rounded-md p-2 flex items-center justify-center"
           >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+            <Plus className="mr-2" /> Nueva Consulta
+          </button>
+        </div>
+        <nav className="flex-1 overflow-y-auto">
+          {conversations.map((conv) => (
+            <button
+              key={conv.id}
+              onClick={() => setCurrentConversation(conv.id)}
+              className={`block w-full text-left px-4 py-2 hover:bg-gray-800 ${
+                currentConversation === conv.id ? "bg-gray-800" : ""
+              }`}
+            >
+              {conv.title}
+            </button>
+          ))}
+        </nav>
+        <div className="p-4 border-t border-gray-800">
+          <button className="w-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-white rounded-md p-2 flex items-center justify-center">
+            <Star className="mr-2" /> Suscribirse a Premium
+          </button>
         </div>
       </div>
 
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      {/* Main content */}
+      <div className="flex-1 flex flex-col">
+        <header className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+          <div className="flex items-center">
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="mr-4 md:hidden"
+            >
+              <Menu />
+            </button>
+            <h1 className="text-xl font-semibold flex items-center">
+              Asistente Financiero IA
+            </h1>
+          </div>
+          <div className="relative">
+            <button
+              onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
+              className="rounded-full bg-gray-200 p-2 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <User className="w-6 h-6 text-gray-600" />
+            </button>
+            {isProfileMenuOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                <a
+                  href="#"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  <User className="inline-block mr-2 w-4 h-4" /> Perfil
+                </a>
+                <a
+                  href="#"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  <Settings className="inline-block mr-2 w-4 h-4" />{" "}
+                  Configuración
+                </a>
+                <a
+                  href="#"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  <LogOut className="inline-block mr-2 w-4 h-4" /> Cerrar sesión
+                </a>
+              </div>
+            )}
+          </div>
+        </header>
+        <div className="flex-1 overflow-auto p-4 space-y-4">
+          {/* Aquí irían los mensajes de la conversación */}
+          <div className="bg-white p-4 rounded-lg shadow">
+            <p className="text-gray-800">
+              Bienvenido a tu asistente financiero personal. ¿En qué puedo
+              ayudarte hoy?
+            </p>
+          </div>
+        </div>
+        <div className="p-4 bg-white border-t border-gray-200">
+          <div className="flex items-center space-x-2">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Escribe tu mensaje aquí..."
+              className="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button className="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <Send className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
       </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   );
 }
